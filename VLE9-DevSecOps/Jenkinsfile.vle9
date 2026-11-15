@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -5,23 +6,27 @@ pipeline {
         IMAGE_NAME = "medisecure"
         IMAGE_TAG = "v${BUILD_NUMBER}"
         KUBECONFIG = "/var/lib/jenkins/.kube/config"
+        CLUSTER_NAME = "vle-cluster"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out MediSecure source code'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                echo 'Building healthcare application Docker image'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} VLE9-DevSecOps'
             }
         }
 
         stage('Security Scan - Trivy') {
             steps {
+                echo 'Scanning Docker image for HIGH and CRITICAL vulnerabilities'
                 sh '''
                     trivy image \
                     --severity HIGH,CRITICAL \
@@ -33,15 +38,17 @@ pipeline {
 
         stage('Load Image into Kubernetes') {
             steps {
+                echo 'Loading the scanned image into Kind cluster'
                 sh '''
                     kind load docker-image ${IMAGE_NAME}:${IMAGE_TAG} \
-                    --name vle-cluster
+                    --name ${CLUSTER_NAME}
                 '''
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
+                echo 'Deploying MediSecure into healthcare namespace'
                 sh '''
                     kubectl create namespace vle9-healthcare \
                     --dry-run=client -o yaml | kubectl apply -f -
@@ -59,6 +66,7 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
+                echo 'Verifying Kubernetes deployment'
                 sh '''
                     kubectl get pods -n vle9-healthcare
                     kubectl get deployments -n vle9-healthcare
@@ -71,8 +79,10 @@ pipeline {
         success {
             echo 'DevSecOps pipeline completed successfully!'
         }
+
         failure {
             echo 'Security check or deployment failed. Check Console Output.'
         }
     }
 }
+
