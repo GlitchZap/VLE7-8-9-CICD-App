@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediSecure | Healthcare Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        header {
+            background: #0f766e;
+            color: white;
+            padding: 25px 8%;
+        }
+        header h1 { margin: 0; }
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.05);
+        }
+        .status {
+            color: #047857;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        th { background: #f8fafc; }
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1> MediSecure </h1>
+        <p>Secure Healthcare Management System</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Welcome to MediSecure</h2>
+            <p>Healthcare data management with a focus on security,
+               privacy and reliable access.</p>
+            <p class="status">● System Status: Operational</p>
+        </div>
+
+        <div class="card">
+            <h2>Patient Dashboard</h2>
+            <p>Demonstration records only — no real patient information.</p>
+            <table>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>DEMO-001</td>
+                    <td>Alex Morgan</td>
+                    <td>Cardiology</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>DEMO-002</td>
+                    <td>Jamie Taylor</td>
+                    <td>Neurology</td>
+                    <td>Under Review</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Security Overview</h2>
+            <p>Container image vulnerability scanning</p>
+            <p>Automated security checks through Jenkins</p>
+            <p>Secure application deployment using Kubernetes</p>
+        </div>
+    </div>
+
+    <footer>
+        MediSecure | DevSecOps Healthcare Demonstration
+        <br>SRM Institute of Science and Technology
+    </footer>
+</body>
+</html>
