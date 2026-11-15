@@ -1,0 +1,55 @@
+
+pipeline {
+    agent any
+
+    environment {
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
+    }
+
+    parameters {
+        choice(
+            name: 'TARGET',
+            choices: ['green', 'blue'],
+            description: 'Choose which environment receives traffic'
+        )
+    }
+
+    stages {
+        stage('Check Deployments') {
+            steps {
+                sh '''
+                    kubectl rollout status deployment/blue-deployment
+                    kubectl rollout status deployment/green-deployment
+                '''
+            }
+        }
+
+        stage('Switch Traffic') {
+            steps {
+                sh '''
+                    kubectl patch service vle7-service \
+                    -p '{"spec":{"selector":{"app":"vle8-app","version":"'"${TARGET}"'"}}}'
+                '''
+            }
+        }
+
+        stage('Verify Traffic') {
+            steps {
+                sh '''
+                    kubectl get service vle7-service
+                    kubectl get endpoints vle7-service
+                    curl -f http://localhost:30080
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Traffic successfully switched to ${params.TARGET}!"
+        }
+        failure {
+            echo 'Blue-Green deployment failed. Check Console Output.'
+        }
+    }
+}
